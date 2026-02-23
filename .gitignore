@@ -1,0 +1,34 @@
+# 忽略所有日志文件
+logs/
+numpy_files/
+samples/
+trained_models/
+frontier_saves/
+
+
+
+# 忽略临时/编译文件
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# 忽略IDE配置文件
+.vscode/
+.idea/
+
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# 忽略Python相关
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+
+# 忽略数据/缓存文件
+data/
+cache/
