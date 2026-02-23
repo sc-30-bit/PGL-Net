@@ -61,8 +61,8 @@ models_={
 loaders_={
 	'rw2ah_train':RW2AH_train_loader,
 	'rw2ah_test':RW2AH_test_loader,
-    'merged_train':Merged_train_loader,
-	'merged_test':Merged_test_loader,
+    'rudb_train':RUDB_train_loader,
+	'rudb_test':RUDB_test_loader,
     'rrshid_train':RRSHID_train_loader,
 	'rrshid_test':RRSHID_test_loader,
 }

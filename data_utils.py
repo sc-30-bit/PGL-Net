@@ -198,15 +198,15 @@ RW2AH_test_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=False,si
     pin_memory=True)
 
 # Add support path for MergedDataset
-merged_path="/home/klay/papersToReproduce/MergedDataset_cropped" #path to your 'MergedDataset' folder
-Merged_train_loader=DataLoader(dataset=RealWorld_Dataset(merged_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
+rudb_path="/home/klay/papersToReproduce/MergedDataset_cropped" #path to your 'MergedDataset' folder
+RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
     pin_memory=True,
     prefetch_factor=2,
     persistent_workers=True,
     worker_init_fn=seed_worker,
     generator=g,
     )
-Merged_test_loader=DataLoader(dataset=RealWorld_Dataset(merged_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
+RUDB_test_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
     pin_memory=True)
 
 rrshid_path="/home/klay/papersToReproduce/RRSHID-noVal" #path to your 'RRSHID' folder

@@ -1,0 +1,19 @@
+{
+    "net": "pglnet_s",
+    "crop": true,
+    "crop_size": 256,
+    "bs": 32,
+    "lr": 0.0004,
+    "eta_min": 4e-8,
+    "trainset": "rrshid_train",
+    "testset": "rrshid_test",
+    "steps": 100000,
+    "eval_step": 1000,
+    "optimizer": "adamw",
+    "weight_decay": 0.0,
+    "scheduler_type": "cosrestart",
+    "amp": true,
+    "loss_type": "l1_fft",
+    "fft_loss_weight": 0.1,
+    "exp_num": 1
+}

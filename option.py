@@ -7,6 +7,7 @@ from torch import optim
 import torch,warnings
 from torch import nn
 import torchvision.utils as vutils
+import json
 warnings.filterwarnings('ignore')
 
 def str2bool(v):
@@ -20,6 +21,7 @@ def str2bool(v):
 		raise argparse.ArgumentTypeError('Boolean value expected.')
 
 parser=argparse.ArgumentParser()
+parser.add_argument('--config', type=str, default=None, help='Path to JSON config file')
 parser.add_argument('--steps',type=int,default=100000)
 parser.add_argument('--device',type=str,default='Automatic detection')
 parser.add_argument('--resume',type=str2bool,default=True)
@@ -51,6 +53,19 @@ parser.add_argument('--lpips_eval', type=str2bool, default=False, help='evaluate
 parser.add_argument('--lpips_net', type=str, default='vgg', choices=['alex', 'vgg', 'squeeze'], help='LPIPS network type')
 
 opt=parser.parse_args()
+
+# Load config from JSON file if provided
+if opt.config is not None and os.path.exists(opt.config):
+    print(f"Loading configuration from: {opt.config}")
+    with open(opt.config, 'r') as f:
+        config_dict = json.load(f)
+    
+    # Override command-line arguments with JSON config
+    for key, value in config_dict.items():
+        if hasattr(opt, key):
+            setattr(opt, key, value)
+elif opt.config is not None:
+    print(f"Warning: Config file not found: {opt.config}")
 
 opt.device='cuda' if torch.cuda.is_available() else 'cpu'
 model_name=opt.trainset+'_'+opt.net.split('.')[0]+'_'+'_exp'+str(opt.exp_num)
