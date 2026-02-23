@@ -12,6 +12,8 @@
     "optimizer": "adamw",
     "weight_decay": 0.0,
     "scheduler_type": "cosrestart",
+    "restart_periods": "100000",
+    "restart_weights": "1",
     "amp": true,
     "loss_type": "l1_fft",
     "fft_loss_weight": 0.1,

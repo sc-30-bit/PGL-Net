@@ -11,27 +11,9 @@ import warnings
 import time
 import importlib
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-if parent_dir not in sys.path:
-    sys.path.append(parent_dir)
-
-try:
-    from models import pglnet_t, pglnet_s, pglnet_b, pglnet_d
-except ImportError as e:
-    raise ImportError(f"Model import failed: {e}")
-
-try:
-    from basicsr.metrics.niqe import calculate_niqe
-    from metrics import psnr, ssim, calculate_lpips, _get_lpips_model
-except ImportError:
-    print("Warning: metrics.py or basicsr library not found.")
-    print("Please ensure metrics.py is in the current directory and basicsr is installed (pip install basicsr)")
-    # Define placeholder functions to prevent errors
-    def psnr(*args, **kwargs): return 0.0
-    def ssim(*args, **kwargs): return type('obj', (object,), {'item': lambda: 0.0})
-    def calculate_lpips(*args, **kwargs): return 0.0
-    def _get_lpips_model(*args, **kwargs): return None
+from models import pglnet_t, pglnet_s, pglnet_b, pglnet_d
+from basicsr.metrics.niqe import calculate_niqe
+from metrics import psnr, ssim, calculate_lpips, _get_lpips_model
 
 warnings.filterwarnings('ignore')
 
@@ -316,7 +298,7 @@ def main():
     parser.add_argument('--tile', type=int, default=None, help='Tile size for processing large images')
     parser.add_argument('--tile_overlap', type=int, default=32, help='Overlap size between tiles')
     parser.add_argument('--no_lpips', action='store_true', help='Skip LPIPS calculation')
-    parser.add_argument('--model_type', type=str, default='pglnet_t', help='Explicitly specify model type (e.g., pglnet_t, pglnet_s, etc.). If not specified, inferred from weight filename.')
+    parser.add_argument('--model_type', type=str, default='none', help='Explicitly specify model type (e.g., pglnet_t, pglnet_s, etc.). If not specified, inferred from weight filename.')
 
     args = parser.parse_args()
 
