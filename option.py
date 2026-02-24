@@ -68,7 +68,7 @@ elif opt.config is not None:
     print(f"Warning: Config file not found: {opt.config}")
 
 opt.device='cuda' if torch.cuda.is_available() else 'cpu'
-model_name=opt.trainset+'_'+opt.net.split('.')[0]+'_'+'_exp'+str(opt.exp_num)
+model_name=opt.trainset+'_'+opt.net.split('.')[0]+'_exp'+str(opt.exp_num)
 opt.model_dir=opt.model_dir+model_name+'.pk'
 log_dir='logs/'+model_name
 
