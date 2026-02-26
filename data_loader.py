@@ -189,9 +189,9 @@ print(pwd)
 rw2ah_path="/home/klay/papersToReproduce/subset_RW2AH" #path to your 'data' folder
 
 RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,        # <--- Key! Enable 8 processes for parallel image loading
-    pin_memory=True,      # <--- Key! Pinned memory for faster transfer
-    prefetch_factor=2,    # <--- Optional, each worker prefetches 2 batches
-    persistent_workers=True, # <--- Optional, avoid destroying and recreating processes after each epoch
+    pin_memory=True,     
+    prefetch_factor=2,   
+    persistent_workers=True, 
     worker_init_fn=seed_worker,
     generator=g,
     )

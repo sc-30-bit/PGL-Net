@@ -152,6 +152,10 @@ def train(net,loader_train,loader_test,optim,criterion, scaler, scheduler=None):
 
             l1_loss_val = criterion[0](out, y).mean()
             loss = l1_loss_val
+            
+            if loss_config['use_fft']:
+                    fft_loss_val = criterion[1](out, y)
+                    loss += loss_config['fft_weight'] * fft_loss_val
 
             loss.backward()
             optim.step()
