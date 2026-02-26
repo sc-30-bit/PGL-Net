@@ -177,4 +177,29 @@ class AutoWeightedTotalLoss(nn.Module):
         total_loss = loss_spatial_weighted + loss_fft_weighted
 
         return total_loss
+
+class APFFTLoss(nn.Module):
+    def __init__(self, loss_weight=1.0, reduction='mean', alpha=1.0):
+        super(APFFTLoss, self).__init__()
+        self.alpha = alpha
+        self.l1_loss = nn.L1Loss() 
+
+    def forward(self, pred, gt):
+        pred_fft = torch.fft.rfft2(pred, dim=(-2, -1))
+        gt_fft = torch.fft.rfft2(gt, dim=(-2, -1))
     
+        pred_amp = torch.abs(pred_fft)
+        gt_amp = torch.abs(gt_fft)
+        
+        pred_pha = torch.angle(pred_fft)
+        gt_pha = torch.angle(gt_fft)
+
+        loss_amp = self.l1_loss(pred_amp, gt_amp)
+        diff_phase = pred_pha - gt_pha
+        diff_phase = (diff_phase + torch.pi) % (2 * torch.pi) - torch.pi
+
+        loss_pha = torch.mean(torch.abs(diff_phase))
+
+        loss_f = loss_amp + self.alpha * loss_pha
+
+        return loss_f

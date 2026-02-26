@@ -51,6 +51,8 @@ parser.add_argument('--window_size', type=int, default=32, help='Window size for
 parser.add_argument('--val_only_psnr', type=str2bool, default=True, help='Only calculate PSNR during validation to save training time')
 parser.add_argument('--lpips_eval', type=str2bool, default=False, help='evaluate using LPIPS')
 parser.add_argument('--lpips_net', type=str, default='vgg', choices=['alex', 'vgg', 'squeeze'], help='LPIPS network type')
+parser.add_argument('--use_ddp', action='store_true', default=False, help='use Distributed Data Parallel')
+parser.add_argument('--num_workers', default=16, type=int, help='number of workers')
 
 opt=parser.parse_args()
 

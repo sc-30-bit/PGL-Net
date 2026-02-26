@@ -35,7 +35,9 @@ try:
 except:
     pass
 
+numworkers=opt.num_workers
 BS=opt.bs
+print(numworkers)
 print(BS)
 crop_size='whole_img'
 if opt.crop:
@@ -186,7 +188,7 @@ print(pwd)
 
 rw2ah_path="/home/klay/papersToReproduce/subset_RW2AH" #path to your 'data' folder
 
-RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,        # <--- Key! Enable 8 processes for parallel image loading
+RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,        # <--- Key! Enable 8 processes for parallel image loading
     pin_memory=True,      # <--- Key! Pinned memory for faster transfer
     prefetch_factor=2,    # <--- Optional, each worker prefetches 2 batches
     persistent_workers=True, # <--- Optional, avoid destroying and recreating processes after each epoch
@@ -198,7 +200,7 @@ RW2AH_test_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=False,si
 
 # Add support path for MergedDataset
 rudb_path="/home/klay/papersToReproduce/MergedDataset_cropped" #path to your 'MergedDataset' folder
-RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
+RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
     persistent_workers=True,
@@ -209,7 +211,7 @@ RUDB_test_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=False,size
     pin_memory=True)
 
 rrshid_path="/home/klay/papersToReproduce/RRSHID-noVal" #path to your 'RRSHID' folder
-RRSHID_train_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
+RRSHID_train_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
     persistent_workers=True,
@@ -222,7 +224,7 @@ RRSHID_test_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=False,
 # synthetic data
 path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
 
-ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
+ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
     persistent_workers=True,
@@ -232,7 +234,7 @@ ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True
 ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False,num_workers=4,
     pin_memory=True)
 
-OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True,num_workers=8,
+OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
     persistent_workers=True,

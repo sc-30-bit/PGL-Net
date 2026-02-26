@@ -73,10 +73,6 @@ loaders_={
 start_time=time.time()
 T=opt.steps	
 
-def lr_schedule_cosdecay(t,T,init_lr=opt.lr):
-	lr=0.5*(1+math.cos(t*math.pi/T))*init_lr
-	return lr
-
 def train(net,loader_train,loader_test,optim,criterion, scaler, scheduler=None):
     losses=[]
     start_step=0
