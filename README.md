@@ -74,19 +74,24 @@ pip install -r requirements.txt
 ## Training
 
 ```bash
-python main.py --config (config_path)
 torchrun --nproc_per_node=* main.py --config (config_path) --use_ddp
 ```
 
 Examples:
 
-```bash
-# Single-GPU training (for example, RRSHID / PGL-Net-T)
-python main.py --config ./configs/RRSHID/pglnet_t.json
+Single-GPU training (for example, RRSHID / PGL-Net-T)
 
-# Multi-GPU training with DDP (for example, RESIDE-IN, 2 GPUs)
+```bash
+torchrun --nproc_per_node=1 main.py --config ./configs/RRSHID/pglnet_t.json --use_ddp
+```
+
+Multi-GPU training  (for example, RESIDE-IN / PGL-Net-T, 2 GPUs)
+
+```bash
 torchrun --nproc_per_node=2 main.py --config ./configs/RESIDE-IN/pglnet_t.json --use_ddp
 ```
+
+Note that we use mixed precision training and distributed data parallel by default.
 
 Available configs include:
 
@@ -105,7 +110,19 @@ Available configs include:
 
 ```bash
 python test.py --weight (weight_path) --model_type (model_type) (--tile 1024 if RUDB) --test_dir (test_dir) --gt_dir (gt_dir)
-python test.py --weight rrshid_pglnet_t.pk --model_type pglnet_t
+```
+Examples:
+
+Test on RRSHID (PGL-Net-T)
+
+```bash
+python test.py --weight rrshid_pglnet_t.pk --model_type pglnet_t --test_dir ./datasets/RRSHID/test/input --gt_dir ./datasets/RRSHID/test/gt
+```
+
+Test on RUDB (PGL-Net-T)
+
+```bash
+python test.py --weight rudb_pglnet_t.pk --model_type pglnet_t --test_dir ./datasets/RUDB/test/input --gt_dir ./datasets/RUDB/test/gt --tile 1024
 ```
 
 ## Model Overhead (Params / MACs)
