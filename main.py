@@ -211,16 +211,25 @@ def train(net, loader_train, loader_test, optim, criterion, scaler, scheduler=No
                 with torch.no_grad():
                     if opt.lpips_eval:
                         val_ssim, val_psnr, val_lpips = test(base_net, loader_test, max_psnr, max_ssim, step)
+
+                        cur_max_psnr = max(max_psnr, val_psnr)
+                        cur_max_ssim = max(max_ssim, val_ssim)
+                        cur_min_lpips = min(min_lpips, val_lpips) if min_lpips is not None else val_lpips
+                        
                         if opt.val_only_psnr:
-                            print(f'\nstep :{step} |val_psnr :{val_psnr:.4f}')
+                            print(f'\nstep :{step} | val_psnr :{val_psnr:.4f} (best: {cur_max_psnr:.4f})')
                         else:
-                            print(f'\nstep :{step} |val_psnr :{val_psnr:.4f}|val_ssim:{val_ssim:.4f}|val_lpips:{val_lpips:.4f}')
+                            print(f'\nstep :{step} | val_psnr :{val_psnr:.4f} (best: {cur_max_psnr:.4f}) | val_ssim:{val_ssim:.4f} (best: {cur_max_ssim:.4f}) | val_lpips:{val_lpips:.4f} (best: {cur_min_lpips:.4f})')
                     else:
                         val_ssim, val_psnr = test(base_net, loader_test, max_psnr, max_ssim, step)
+                        
+                        cur_max_psnr = max(max_psnr, val_psnr)
+                        cur_max_ssim = max(max_ssim, val_ssim)
+                        
                         if opt.val_only_psnr:
-                            print(f'\nstep :{step} |val_psnr :{val_psnr:.4f}')
+                            print(f'\nstep :{step} | val_psnr :{val_psnr:.4f} (best: {cur_max_psnr:.4f})')
                         else:
-                            print(f'\nstep :{step} |val_psnr :{val_psnr:.4f}|val_ssim:{val_ssim:.4f}')
+                            print(f'\nstep :{step} | val_psnr :{val_psnr:.4f} (best: {cur_max_psnr:.4f}) | val_ssim:{val_ssim:.4f} (best: {cur_max_ssim:.4f})')
                 
                 psnr_normalizer.update(val_psnr)
                 if opt.val_only_psnr:
