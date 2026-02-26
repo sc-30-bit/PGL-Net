@@ -84,18 +84,7 @@ models_={
     'pglnet_b': pglnet_b(),
     'pglnet_d': pglnet_d(),
 }
-loaders_={
-    'rw2ah_train': RW2AH_train_loader,
-    'rw2ah_test': RW2AH_test_loader,
-    'rudb_train': RUDB_train_loader,
-    'rudb_test': RUDB_test_loader,
-    'rrshid_train': RRSHID_train_loader,
-    'rrshid_test': RRSHID_test_loader,
-    'its_train': ITS_train_loader,
-    'its_test': ITS_test_loader,
-    'ots_train': OTS_train_loader,
-    'ots_test': OTS_test_loader
-}
+
 start_time=time.time()
 T=opt.steps	
 
@@ -399,8 +388,8 @@ def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 if __name__ == "__main__":
-    loader_train = get_dataloader(opt.trainset, is_train=True, opt=opt, local_rank=local_rank)
-    loader_test = get_dataloader(opt.testset, is_train=False, opt=opt, local_rank=local_rank)
+    loader_train = get_dataloader(opt.trainset, is_train=True, opt=opt, localrank=local_rank)
+    loader_test = get_dataloader(opt.testset, is_train=False, opt=opt, localrank=local_rank)
     
     # DDP Dataloader Overrides
     if opt.use_ddp and local_rank != -1:
