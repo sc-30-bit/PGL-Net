@@ -11,7 +11,6 @@ from PIL import Image
 from torch.utils.data import DataLoader
 from matplotlib import pyplot as plt
 from torchvision.utils import make_grid
-from metrics import *
 from option import opt
 # Set random seed for reproducibility
 seed = 42
@@ -70,7 +69,7 @@ class RESIDE_Dataset(data.Dataset):
         haze=Image.open(self.haze_imgs[index])
         if isinstance(self.size,int):
             while haze.size[0]<self.size or haze.size[1]<self.size :
-                index=random.randint(0,20000)
+                index = random.randint(0, len(self.haze_imgs) - 1)
                 haze=Image.open(self.haze_imgs[index])
         img=self.haze_imgs[index]
         id=img.split('/')[-1].split('_')[0]
@@ -93,7 +92,7 @@ class RESIDE_Dataset(data.Dataset):
                 data=FF.rotate(data,90*rand_rot)
                 target=FF.rotate(target,90*rand_rot)
         data=tfs.ToTensor()(data)
-        data=tfs.Normalize(mean=[0.64, 0.6, 0.58],std=[0.14,0.15, 0.152])(data)
+        #data=tfs.Normalize(mean=[0.64, 0.6, 0.58],std=[0.14,0.15, 0.152])(data)
         target=tfs.ToTensor()(target)
         return  data ,target
     def __len__(self):
@@ -218,4 +217,27 @@ RRSHID_train_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=True,
     generator=g,
     )
 RRSHID_test_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
+    pin_memory=True)
+
+# synthetic data
+path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
+
+ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=8,
+    pin_memory=True,
+    prefetch_factor=2,
+    persistent_workers=True,
+    worker_init_fn=seed_worker,
+    generator=g,
+    )
+ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False,num_workers=4,
+    pin_memory=True)
+
+OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True,num_workers=8,
+    pin_memory=True,
+    prefetch_factor=2,
+    persistent_workers=True,
+    worker_init_fn=seed_worker,
+    generator=g,
+    )
+OTS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/outdoor',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False,num_workers=4,
     pin_memory=True)

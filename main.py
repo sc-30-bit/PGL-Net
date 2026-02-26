@@ -13,7 +13,7 @@ from tensorboardX import SummaryWriter
 import torchvision.utils as vutils
 warnings.filterwarnings('ignore')
 from option import opt,model_name,log_dir
-from data_utils import *
+from data_loader import *
 from losses import *
 from lr_scheduler import *
 from utils import *
@@ -65,6 +65,10 @@ loaders_={
 	'rudb_test':RUDB_test_loader,
     'rrshid_train':RRSHID_train_loader,
 	'rrshid_test':RRSHID_test_loader,
+    'its_train':ITS_train_loader,
+	'its_test':ITS_test_loader,
+    'ots_train':OTS_train_loader,
+	'ots_test':OTS_test_loader
 }
 start_time=time.time()
 T=opt.steps	

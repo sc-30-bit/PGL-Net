@@ -1,0 +1,21 @@
+{
+    "net": "pglnet_s",
+    "crop": true,
+    "crop_size": 256,
+    "bs": 128,
+    "lr": 0.0004,
+    "eta_min": 4e-8,
+    "trainset": "ots_train",
+    "testset": "ots_test",
+    "steps": 200000,
+    "eval_step": 1000,
+    "optimizer": "adamw",
+    "weight_decay": 0.0,
+    "scheduler_type": "cosrestart",
+    "restart_periods": "200000",
+    "restart_weights": "1",
+    "amp": true,
+    "loss_type": "l1_fft",
+    "fft_loss_weight": 0.1,
+    "exp_num": 1
+}

@@ -67,7 +67,7 @@ class GateLayer(nn.Module):
         return out
 
 
-class LGRBlock(nn.Module):
+class DAMBlock(nn.Module):
     def __init__(self, net_depth, dim, kernel_size=3, conv_layer=GateLayer, norm_layer=nn.BatchNorm2d, gate_act=nn.Sigmoid):
         super().__init__()
         self.norm = norm_layer(dim)
@@ -88,7 +88,7 @@ class BasicLayer(nn.Module):
         self.dim = dim
         self.depth = depth
         self.blocks = nn.ModuleList([
-            LGRBlock(net_depth, dim, kernel_size, conv_layer, norm_layer, gate_act)
+            DAMBlock(net_depth, dim, kernel_size, conv_layer, norm_layer, gate_act)
             for i in range(depth)
         ])
 
