@@ -93,7 +93,9 @@ torchrun --nproc_per_node=2 main.py --config ./configs/RESIDE-IN/pglnet_t.json -
 
 Note that we use mixed precision training and distributed data parallel by default.
 
-Available configs include:
+<details>
+<summary><strong>Available configs</strong> (click to expand)</summary>
+<br>
 
 - `configs/RRSHID/pglnet_t.json`
 - `configs/RRSHID/pglnet_s.json`
@@ -105,6 +107,8 @@ Available configs include:
 - `configs/RESIDE-IN/pglnet_s.json`
 - `configs/RESIDE-OUT/pglnet_t.json`
 - `configs/RESIDE-OUT/pglnet_s.json`
+
+</details>
 
 ## Testing
 
