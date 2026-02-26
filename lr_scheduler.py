@@ -2,7 +2,7 @@ import math
 from collections import Counter
 from torch.optim.lr_scheduler import _LRScheduler
 
-def lr_schedule_cosdecay(t,T,init_lr=opt.lr):
+def lr_schedule_cosdecay(t,T,init_lr):
 	lr=0.5*(1+math.cos(t*math.pi/T))*init_lr
 	return lr
 

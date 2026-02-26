@@ -75,7 +75,17 @@ pip install -r requirements.txt
 
 ```bash
 python main.py --config (config_path)
+torchrun --nproc_per_node=* main.py --config (config_path) --use_ddp
+```
+
+Examples:
+
+```bash
+# Single-GPU training (for example, RRSHID / PGL-Net-T)
 python main.py --config ./configs/RRSHID/pglnet_t.json
+
+# Multi-GPU training with DDP (for example, RESIDE-IN, 2 GPUs)
+torchrun --nproc_per_node=2 main.py --config ./configs/RESIDE-IN/pglnet_t.json --use_ddp
 ```
 
 Available configs include:

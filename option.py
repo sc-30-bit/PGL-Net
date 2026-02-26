@@ -85,17 +85,9 @@ os.makedirs(opt.frontier_archives_dir, exist_ok=True)
 print(opt)
 print('model_dir:',opt.model_dir)
 
-if not os.path.exists(opt.frontier_root):
-    os.makedirs(opt.frontier_root)
-if not os.path.exists('trained_models'):
-	os.mkdir('trained_models')
-if not os.path.exists('numpy_files'):
-	os.mkdir('numpy_files')
-if not os.path.exists('logs'):
-	os.mkdir('logs')
-if not os.path.exists('samples'):
-	os.mkdir('samples')
-if not os.path.exists(f"samples/{model_name}"):
-	os.mkdir(f'samples/{model_name}')
-if not os.path.exists(log_dir):
-	os.mkdir(log_dir)
+os.makedirs('trained_models', exist_ok=True)
+os.makedirs('numpy_files', exist_ok=True)
+os.makedirs('logs', exist_ok=True)
+os.makedirs('samples', exist_ok=True)
+os.makedirs(f'samples/{model_name}', exist_ok=True)
+os.makedirs(log_dir, exist_ok=True)

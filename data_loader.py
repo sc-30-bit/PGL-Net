@@ -20,6 +20,8 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 
+local_rank = int(os.environ.get("LOCAL_RANK", 0))
+
 def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % 2**32
     np.random.seed(worker_seed)
@@ -37,11 +39,14 @@ except:
 
 numworkers=opt.num_workers
 BS=opt.bs
-print(numworkers)
-print(BS)
+if local_rank == 0:
+    print("num_workers(total):",numworkers)
+    print("batchsize(total):",BS)
 crop_size='whole_img'
 if opt.crop:
     crop_size=opt.crop_size
+    if local_rank == 0:
+        print('crop size',size)
 
 def tensorShow(tensors,titles=None):
         '''
@@ -60,13 +65,13 @@ class RESIDE_Dataset(data.Dataset):
     def __init__(self,path,train,size=crop_size,format='.png'):
         super(RESIDE_Dataset,self).__init__()
         self.size=size
-        print('crop size',size)
         self.train=train
         self.format=format
         self.haze_imgs_dir=os.listdir(os.path.join(path,'hazy'))
         self.haze_imgs=[os.path.join(path,'hazy',img) for img in self.haze_imgs_dir]
         self.clear_dir=os.path.join(path,'clear')
-        print(f"Found {len(self.haze_imgs)} hazy images in {path}/input")
+        if local_rank == 0:
+            print(f"Found {len(self.haze_imgs)} hazy images in {path}/input")
     def __getitem__(self, index):
         haze=Image.open(self.haze_imgs[index])
         if isinstance(self.size,int):
@@ -117,8 +122,8 @@ class RealWorld_Dataset(data.Dataset):
 
         # Load all input image paths
         self.input_imgs = [os.path.join(self.input_dir, img) for img in os.listdir(self.input_dir)]
-
-        print(f"Found {len(self.input_imgs)} input images in {self.input_dir}")
+        if local_rank == 0:
+            print(f"Found {len(self.input_imgs)} input images in {self.input_dir}")
 
     def __getitem__(self, index):
         # Load hazy image
@@ -184,9 +189,10 @@ class RealWorld_Dataset(data.Dataset):
 
 import os
 pwd=os.getcwd()
-print(pwd)
+if local_rank == 0:
+    print(pwd)
 
-rw2ah_path="/home/klay/papersToReproduce/subset_RW2AH" #path to your 'data' folder
+rw2ah_path="/workspace/Datasets/RW2AH" #path to your 'data' folder
 
 RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,        # <--- Key! Enable 8 processes for parallel image loading
     pin_memory=True,     
@@ -199,7 +205,7 @@ RW2AH_test_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=False,si
     pin_memory=True)
 
 # Add support path for MergedDataset
-rudb_path="/home/klay/papersToReproduce/MergedDataset_cropped" #path to your 'MergedDataset' folder
+rudb_path="/workspace/Datasets/MergedDataset" #path to your 'MergedDataset' folder
 RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
@@ -210,7 +216,7 @@ RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size
 RUDB_test_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
     pin_memory=True)
 
-rrshid_path="/home/klay/papersToReproduce/RRSHID-noVal" #path to your 'RRSHID' folder
+rrshid_path="/workspace/Datasets/RRSHID-noVal" #path to your 'RRSHID' folder
 RRSHID_train_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
     prefetch_factor=2,
@@ -222,7 +228,7 @@ RRSHID_test_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=False,
     pin_memory=True)
 
 # synthetic data
-path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
+path='/workspace/Datasets'#path to your 'data' folder
 
 ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
     pin_memory=True,
