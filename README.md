@@ -7,18 +7,9 @@
   <a href=""><img src="https://img.shields.io/badge/GoogleDrive-Weights-f1c40f?style=flat-square" alt="Weights"></a>
 </p>
 
-## Overview
 
-PGL-Net is the official implementation of **Efficient Real-World Dehazing via Physics-Inspired Global-Local Decoupling**.
-
-- arXiv: `[Coming Soon]()`
-- Paper: `[Coming Soon]()`
-- Datasets (Google Drive): `[Coming Soon]()`
-- Pretrained Weights (Google Drive): `[Coming Soon]()`
-
-## Abstract
-
-> [Abstract will be added here.]
+> **Abstract:**
+> Real-world single image dehazing is highly ill-posed due to spatially and spectrally varying scattering, while practical deployment demands lightweight and low-latency models. Existing approaches either rely on fragile physical inversion under simplified assumptions or adopt heavy blind architectures unsuitable for edge deployment. To overcome these limitations, we propose PGL-Net (Physics-Inspired Global-Local Decoupling Network), a lightweight framework that incorporates physical inductive biases via operator-level emulation, avoiding explicit parameter estimation. It decouples dehazing into global distribution rectification and local structural refinement. A Physics-Inspired Affine Fusion (PAF) module performs globally conditioned alignment across hierarchical skip connections to compensate for haze-induced bias, while a compact Degradation-Aware Modulation (DAM) block adaptively restores spatially and spectrally variant details through dynamic feature modulation. Extensive experiments on multiple real-world benchmarks demonstrate that PGL-Net achieves state-of-the-art restoration quality with significantly reduced complexity. Compared with the recent SOTA SGDN, the Tiny variant (PGL-Net-T) improves PSNR by up to +2.6 dB and consistently enhances downstream object detection accuracy, while achieving over a 10x reduction in inference latency.
 
 ## Network Architecture / Insight
 
@@ -32,6 +23,7 @@ The following paper tables are provided as images. Click each section to expand.
 <summary><strong>RRSHID Results</strong> (click to expand)</summary>
 <br>
 
+
 ![RRSHID Results](figs/rrshid_results.png)
 
 </details>
@@ -39,6 +31,7 @@ The following paper tables are provided as images. Click each section to expand.
 <details>
 <summary><strong>RW2AH Results</strong> (click to expand)</summary>
 <br>
+
 
 ![RW2AH Results](figs/rw2ah_results.png)
 
@@ -48,6 +41,7 @@ The following paper tables are provided as images. Click each section to expand.
 <summary><strong>RTTS Results</strong> (click to expand)</summary>
 <br>
 
+
 ![RTTS Results](figs/rtts_results.png)
 
 </details>
@@ -56,16 +50,23 @@ The following paper tables are provided as images. Click each section to expand.
 <summary><strong>NTIRE Results</strong> (click to expand)</summary>
 <br>
 
+
 ![NTIRE Results](figs/ntire_results.png)
 
 </details>
 
 ## Environment Setup
 
+1. Create a new conda environment
+
 ```bash
 conda create -n pglnet python=3.9
 conda activate pglnet
+```
 
+2. Install dependencies
+
+```bash
 conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 pip install -r requirements.txt
 ```
@@ -85,6 +86,10 @@ Available configs include:
 - `configs/RUDB/pglnet_s.json`
 - `configs/RW2AH/pglnet_t.json`
 - `configs/RW2AH/pglnet_s.json`
+- `configs/RESIDE-IN/pglnet_t.json`
+- `configs/RESIDE-IN/pglnet_s.json`
+- `configs/RESIDE-OUT/pglnet_t.json`
+- `configs/RESIDE-OUT/pglnet_s.json`
 
 ## Testing
 
