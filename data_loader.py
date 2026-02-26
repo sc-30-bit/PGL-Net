@@ -46,7 +46,7 @@ crop_size='whole_img'
 if opt.crop:
     crop_size=opt.crop_size
     if local_rank == 0:
-        print('crop size',size)
+        print('crop size',crop_size)
 
 def tensorShow(tensors,titles=None):
         '''
@@ -62,7 +62,7 @@ def tensorShow(tensors,titles=None):
         plt.show()
 
 class RESIDE_Dataset(data.Dataset):
-    def __init__(self,path,train,size=crop_size,format='.png'):
+    def __init__(self,path,localrank,train,size=crop_size,format='.png'):
         super(RESIDE_Dataset,self).__init__()
         self.size=size
         self.train=train
@@ -70,7 +70,7 @@ class RESIDE_Dataset(data.Dataset):
         self.haze_imgs_dir=os.listdir(os.path.join(path,'hazy'))
         self.haze_imgs=[os.path.join(path,'hazy',img) for img in self.haze_imgs_dir]
         self.clear_dir=os.path.join(path,'clear')
-        if local_rank == 0:
+        if localrank == 0:
             print(f"Found {len(self.haze_imgs)} hazy images in {path}/input")
     def __getitem__(self, index):
         haze=Image.open(self.haze_imgs[index])
@@ -106,7 +106,7 @@ class RESIDE_Dataset(data.Dataset):
         return len(self.haze_imgs)
 
 class RealWorld_Dataset(data.Dataset):
-    def __init__(self, path, train=True, size='whole_img', format='.png'):
+    def __init__(self, path, localrank, train=True, size='whole_img', format='.png'):
         super(RealWorld_Dataset, self).__init__()
         self.size = size
         self.train = train
@@ -122,7 +122,7 @@ class RealWorld_Dataset(data.Dataset):
 
         # Load all input image paths
         self.input_imgs = [os.path.join(self.input_dir, img) for img in os.listdir(self.input_dir)]
-        if local_rank == 0:
+        if localrank == 0:
             print(f"Found {len(self.input_imgs)} input images in {self.input_dir}")
 
     def __getitem__(self, index):
@@ -191,8 +191,47 @@ import os
 pwd=os.getcwd()
 if local_rank == 0:
     print(pwd)
+    
+def get_dataloader(dataset_name, is_train, opt, localrank):
+    BS = opt.bs
+    numworkers = opt.num_workers
+    crop_size = opt.crop_size if opt.crop else 'whole_img'
 
-rw2ah_path="/workspace/Datasets/RW2AH" #path to your 'data' folder
+    train_kwargs = {
+        'batch_size': BS, 'shuffle': True, 'num_workers': numworkers,
+        'pin_memory': True, 'prefetch_factor': 2, 'persistent_workers': True,
+        'worker_init_fn': seed_worker, 'generator': g
+    }
+    test_kwargs = {
+        'batch_size': 1, 'shuffle': False, 'num_workers': 4, 'pin_memory': True
+    }
+    
+    kwargs = train_kwargs if is_train else test_kwargs
+    size = crop_size if is_train else 'whole_img'
+
+    if 'rw2ah' in dataset_name:
+        path = "/workspace/Datasets/RW2AH"
+        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+    elif 'rudb' in dataset_name:
+        path = "/workspace/Datasets/MergedDataset"
+        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+    elif 'rrshid' in dataset_name:
+        path = "/workspace/Datasets/RRSHID-noVal"
+        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+        
+    elif 'its' in dataset_name:
+        path = '/workspace/Datasets/RESIDE/ITS' if is_train else '/workspace/Datasets/RESIDE/SOTS/indoor'
+        dataset = RESIDE_Dataset(path, localrank, train=is_train, size=size)
+    elif 'ots' in dataset_name:
+        path = '/workspace/Datasets/RESIDE/OTS' if is_train else '/workspace/Datasets/RESIDE/SOTS/outdoor'
+        format = '.jpg' if is_train else '.png'
+        dataset = RESIDE_Dataset(path, localrank, train=is_train, size=size, format=format)
+    else:
+        raise ValueError(f"Unknown dataset: {dataset_name}")
+
+    return DataLoader(dataset=dataset, **kwargs)
+
+'''rw2ah_path="/workspace/Datasets/RW2AH" #path to your 'data' folder
 
 RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,        # <--- Key! Enable 8 processes for parallel image loading
     pin_memory=True,     
@@ -248,4 +287,4 @@ OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True
     generator=g,
     )
 OTS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/outdoor',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False,num_workers=4,
-    pin_memory=True)
+    pin_memory=True)'''

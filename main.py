@@ -390,8 +390,8 @@ def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 if __name__ == "__main__":
-    loader_train = loaders_[opt.trainset]
-    loader_test = loaders_[opt.testset]
+    loader_train = get_dataloader(opt.trainset, is_train=True, opt=opt, local_rank=local_rank)
+    loader_test = get_dataloader(opt.testset, is_train=False, opt=opt, local_rank=local_rank)
     
     # DDP Dataloader Overrides
     if opt.use_ddp and local_rank != -1:
