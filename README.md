@@ -13,7 +13,9 @@
 
 ## Insight
 
-![Insight](figs/insight.png)
+<p align="center">
+  <img src="figs/insight.png" alt="Insight">
+</p>
 
 ## Quantitative Results
 
@@ -24,7 +26,9 @@ The following paper tables are provided as images. Click each section to expand.
 <br>
 
 
-![RRSHID Results](figs/rrshid_results.png)
+<p align="center">
+  <img src="figs/rrshid_results.png" alt="RRSHID Results">
+</p>
 
 </details>
 
@@ -33,7 +37,9 @@ The following paper tables are provided as images. Click each section to expand.
 <br>
 
 
-![RW2AH Results](figs/rw2ah_results.png)
+<p align="center">
+  <img src="figs/rw2ah_results.png" alt="RW2AH Results">
+</p>
 
 </details>
 
@@ -42,7 +48,9 @@ The following paper tables are provided as images. Click each section to expand.
 <br>
 
 
-![NTIRE Results](figs/ntire_results.png)
+<p align="center">
+  <img src="figs/ntire_results.png" alt="NTIRE Results">
+</p>
 
 </details>
 
@@ -51,13 +59,17 @@ The following paper tables are provided as images. Click each section to expand.
 <br>
 
 
-![RTTS Results](figs/rtts_results.png)
+<p align="center">
+  <img src="figs/rtts_results.png" alt="RTTS Results">
+</p>
 
 </details>
 
 ## Deployment
 
-![Deployment](figs/deployment.png)
+<p align="center">
+  <img src="figs/deployment.png" alt="Deployment">
+</p>
 
 ## Environment Setup
 
