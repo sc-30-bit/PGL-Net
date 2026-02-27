@@ -106,13 +106,6 @@ class PairedLoader(data.Dataset):
         if not isinstance(self.size, str):
             W, H = haze.size
             Hc = Wc = self.size
-            
-            if W < Wc or H < Hc:
-                new_W = max(W, Wc)
-                new_H = max(H, Hc)
-                haze = haze.resize((new_W, new_H), Image.BICUBIC)
-                gt = gt.resize((new_W, new_H), Image.BICUBIC)
-                W, H = haze.size  
 
             if self.train and self.edge_decay > 0:
                 if random.random() < Hc / H * self.edge_decay:
@@ -131,10 +124,7 @@ class PairedLoader(data.Dataset):
             gt = FF.crop(gt, top, left, Hc, Wc)
 
         # Data augmentation
-        if self.train:
-            haze, gt = self.augData(haze, gt)
-        else:
-            haze, gt = self.augTest(haze, gt)
+        haze, gt = self.augData(haze, gt)
 
         return haze, gt
 
@@ -151,12 +141,6 @@ class PairedLoader(data.Dataset):
                 target = FF.rotate(target, 90 * rand_rot)
 
         # Convert to tensor without normalization
-        data = tfs.ToTensor()(data)
-        target = tfs.ToTensor()(target)
-        return data, target
-
-    def augTest(self, data, target):
-        # No data augmentation for testing, only convert to tensor without normalization
         data = tfs.ToTensor()(data)
         target = tfs.ToTensor()(target)
         return data, target
