@@ -38,20 +38,20 @@ The following paper tables are provided as images. Click each section to expand.
 </details>
 
 <details>
-<summary><strong>RTTS Results</strong> (click to expand)</summary>
-<br>
-
-
-![RTTS Results](figs/rtts_results.png)
-
-</details>
-
-<details>
 <summary><strong>NTIRE Results</strong> (click to expand)</summary>
 <br>
 
 
 ![NTIRE Results](figs/ntire_results.png)
+
+</details>
+
+<details>
+<summary><strong>RTTS Results</strong> (click to expand)</summary>
+<br>
+
+
+![RTTS Results](figs/rtts_results.png)
 
 </details>
 
