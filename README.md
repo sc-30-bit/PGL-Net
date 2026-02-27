@@ -69,14 +69,40 @@ The following paper tables are provided as images. Click each section to expand.
 
 FP16 latency is measured at `512 x 512`, using [TensorRT](https://developer.nvidia.com/tensorrt) on GPUs and [OpenVINO](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) on CPU.
 
-| Model | Size (pixels) | CPU OpenVINO (ms) | T4 TensorRT10 (ms) | RTX 3090 TensorRT10 (ms) | Params (M) | MACs (G) |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| PGL-Net-T | 512 | 14.69 | 12.90 | 3.92 | 0.78 | 2.71 |
-| PGL-Net-S | 512 | 24.58 | 23.11 | 6.68 | 1.30 | 4.77 |
+<table align="center">
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Size (pixels)</th>
+      <th>CPU OpenVINO (ms)</th>
+      <th>T4 TensorRT10 (ms)</th>
+      <th>RTX 3090 TensorRT10 (ms)</th>
+      <th>Params (M)</th>
+      <th>MACs (G)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PGL-Net-T</td>
+      <td align="center">512</td>
+      <td align="center">14.69</td>
+      <td align="center">12.90</td>
+      <td align="center">3.92</td>
+      <td align="center">0.78</td>
+      <td align="center">2.71</td>
+    </tr>
+    <tr>
+      <td>PGL-Net-S</td>
+      <td align="center">512</td>
+      <td align="center">24.58</td>
+      <td align="center">23.11</td>
+      <td align="center">6.68</td>
+      <td align="center">1.30</td>
+      <td align="center">4.77</td>
+    </tr>
+  </tbody>
+</table>
 
-Weights:
-- **PGL-Net-T**: [Google Drive (Coming Soon)]()
-- **PGL-Net-S**: [Google Drive (Coming Soon)]()
 
 ## Environment Setup
 
