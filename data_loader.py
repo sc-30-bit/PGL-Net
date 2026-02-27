@@ -61,56 +61,11 @@ def tensorShow(tensors,titles=None):
             ax.set_title(tit)
         plt.show()
 
-class RESIDE_Dataset(data.Dataset):
-    def __init__(self,path,localrank,train,size=crop_size,format='.png'):
-        super(RESIDE_Dataset,self).__init__()
-        self.size=size
-        self.train=train
-        self.format=format
-        self.haze_imgs_dir=os.listdir(os.path.join(path,'hazy'))
-        self.haze_imgs=[os.path.join(path,'hazy',img) for img in self.haze_imgs_dir]
-        self.clear_dir=os.path.join(path,'clear')
-        if localrank == 0:
-            print(f"Found {len(self.haze_imgs)} hazy images in {path}/input")
-    def __getitem__(self, index):
-        haze=Image.open(self.haze_imgs[index])
-        if isinstance(self.size,int):
-            while haze.size[0]<self.size or haze.size[1]<self.size :
-                index = random.randint(0, len(self.haze_imgs) - 1)
-                haze=Image.open(self.haze_imgs[index])
-        img=self.haze_imgs[index]
-        id=img.split('/')[-1].split('_')[0]
-        clear_name=id+self.format
-        clear=Image.open(os.path.join(self.clear_dir,clear_name))
-        clear=tfs.CenterCrop(haze.size[::-1])(clear)
-        if not isinstance(self.size,str):
-            i,j,h,w=tfs.RandomCrop.get_params(haze,output_size=(self.size,self.size))
-            haze=FF.crop(haze,i,j,h,w)
-            clear=FF.crop(clear,i,j,h,w)
-        haze,clear=self.augData(haze.convert("RGB") ,clear.convert("RGB") )
-        return haze,clear
-    def augData(self,data,target):
-        if self.train:
-            rand_hor=random.randint(0,1)
-            rand_rot=random.randint(0,3)
-            data=tfs.RandomHorizontalFlip(rand_hor)(data)
-            target=tfs.RandomHorizontalFlip(rand_hor)(target)
-            if rand_rot:
-                data=FF.rotate(data,90*rand_rot)
-                target=FF.rotate(target,90*rand_rot)
-        data=tfs.ToTensor()(data)
-        #data=tfs.Normalize(mean=[0.64, 0.6, 0.58],std=[0.14,0.15, 0.152])(data)
-        target=tfs.ToTensor()(target)
-        return  data ,target
-    def __len__(self):
-        return len(self.haze_imgs)
-
-class RealWorld_Dataset(data.Dataset):
-    def __init__(self, path, localrank, train=True, size='whole_img', format='.png'):
-        super(RealWorld_Dataset, self).__init__()
+class PairedLoader(data.Dataset):
+    def __init__(self, path, localrank, train=True, size='whole_img'):
+        super(PairedLoader, self).__init__()
         self.size = size
         self.train = train
-        self.format = format
 
         # Select different subdirectories based on train/test mode
         if train:
@@ -163,13 +118,12 @@ class RealWorld_Dataset(data.Dataset):
     def augData(self, data, target):
         # Data augmentation for training
         if self.train:
-            rand_hor = random.randint(0, 1)
+            if random.random() > 0.5:
+                data = FF.hflip(data)
+                target = FF.hflip(target)
+                
             rand_rot = random.randint(0, 3)
-            # Horizontal flip
-            data = tfs.RandomHorizontalFlip(rand_hor)(data)
-            target = tfs.RandomHorizontalFlip(rand_hor)(target)
-            # Rotation
-            if rand_rot:
+            if rand_rot > 0:
                 data = FF.rotate(data, 90 * rand_rot)
                 target = FF.rotate(target, 90 * rand_rot)
 
@@ -211,80 +165,21 @@ def get_dataloader(dataset_name, is_train, opt, localrank):
 
     if 'rw2ah' in dataset_name:
         path = "/workspace/Datasets/RW2AH"
-        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size)
     elif 'rudb' in dataset_name:
         path = "/workspace/Datasets/MergedDataset"
-        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size)
     elif 'rrshid' in dataset_name:
         path = "/workspace/Datasets/RRSHID-noVal"
-        dataset = RealWorld_Dataset(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size)
         
     elif 'its' in dataset_name:
-        path = '/workspace/Datasets/RESIDE/ITS' if is_train else '/workspace/Datasets/RESIDE/SOTS/indoor'
-        dataset = RESIDE_Dataset(path, localrank, train=is_train, size=size)
+        path = "/workspace/RESIDE-IN"
+        dataset = PairedLoader(path, localrank, train=is_train, size=size)
     elif 'ots' in dataset_name:
-        path = '/workspace/Datasets/RESIDE/OTS' if is_train else '/workspace/Datasets/RESIDE/SOTS/outdoor'
-        format = '.jpg' if is_train else '.png'
-        dataset = RESIDE_Dataset(path, localrank, train=is_train, size=size, format=format)
+        path = "/workspace/RESIDE-OUT"
+        dataset = PairedLoader(path, localrank, train=is_train, size=size)
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 
     return DataLoader(dataset=dataset, **kwargs)
-
-'''rw2ah_path="/workspace/Datasets/RW2AH" #path to your 'data' folder
-
-RW2AH_train_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,        # <--- Key! Enable 8 processes for parallel image loading
-    pin_memory=True,     
-    prefetch_factor=2,   
-    persistent_workers=True, 
-    worker_init_fn=seed_worker,
-    generator=g,
-    )
-RW2AH_test_loader=DataLoader(dataset=RealWorld_Dataset(rw2ah_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,        # Test set can also use a few workers
-    pin_memory=True)
-
-# Add support path for MergedDataset
-rudb_path="/workspace/Datasets/MergedDataset" #path to your 'MergedDataset' folder
-RUDB_train_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
-    pin_memory=True,
-    prefetch_factor=2,
-    persistent_workers=True,
-    worker_init_fn=seed_worker,
-    generator=g,
-    )
-RUDB_test_loader=DataLoader(dataset=RealWorld_Dataset(rudb_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
-    pin_memory=True)
-
-rrshid_path="/workspace/Datasets/RRSHID-noVal" #path to your 'RRSHID' folder
-RRSHID_train_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
-    pin_memory=True,
-    prefetch_factor=2,
-    persistent_workers=True,
-    worker_init_fn=seed_worker,
-    generator=g,
-    )
-RRSHID_test_loader=DataLoader(dataset=RealWorld_Dataset(rrshid_path,train=False,size='whole_img'),batch_size=1,shuffle=False,num_workers=4,
-    pin_memory=True)
-
-# synthetic data
-path='/workspace/Datasets'#path to your 'data' folder
-
-ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True,num_workers=numworkers,
-    pin_memory=True,
-    prefetch_factor=2,
-    persistent_workers=True,
-    worker_init_fn=seed_worker,
-    generator=g,
-    )
-ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False,num_workers=4,
-    pin_memory=True)
-
-OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True,num_workers=numworkers,
-    pin_memory=True,
-    prefetch_factor=2,
-    persistent_workers=True,
-    worker_init_fn=seed_worker,
-    generator=g,
-    )
-OTS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/outdoor',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False,num_workers=4,
-    pin_memory=True)'''
