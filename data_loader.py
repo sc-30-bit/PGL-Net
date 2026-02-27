@@ -62,10 +62,11 @@ def tensorShow(tensors,titles=None):
         plt.show()
 
 class PairedLoader(data.Dataset):
-    def __init__(self, path, localrank, train=True, size='whole_img'):
+    def __init__(self, path, localrank, train=True, size='whole_img', edge_decay=0.0):
         super(PairedLoader, self).__init__()
         self.size = size
         self.train = train
+        self.edge_decay = edge_decay
 
         # Select different subdirectories based on train/test mode
         if train:
@@ -103,9 +104,31 @@ class PairedLoader(data.Dataset):
 
         # Crop operation
         if not isinstance(self.size, str):
-            i, j, h, w = tfs.RandomCrop.get_params(haze, output_size=(self.size, self.size))
-            haze = FF.crop(haze, i, j, h, w)
-            gt = FF.crop(gt, i, j, h, w)
+            W, H = haze.size
+            Hc = Wc = self.size
+            
+            if W < Wc or H < Hc:
+                new_W = max(W, Wc)
+                new_H = max(H, Hc)
+                haze = haze.resize((new_W, new_H), Image.BICUBIC)
+                gt = gt.resize((new_W, new_H), Image.BICUBIC)
+                W, H = haze.size  
+
+            if self.train and self.edge_decay > 0:
+                if random.random() < Hc / H * self.edge_decay:
+                    top = 0 if random.randint(0, 1) == 0 else H - Hc
+                else:
+                    top = random.randint(0, H - Hc)
+                if random.random() < Wc / W * self.edge_decay:
+                    left = 0 if random.randint(0, 1) == 0 else W - Wc
+                else:
+                    left = random.randint(0, W - Wc)
+            else:
+                top = random.randint(0, H - Hc)
+                left = random.randint(0, W - Wc)
+
+            haze = FF.crop(haze, top, left, Hc, Wc)
+            gt = FF.crop(gt, top, left, Hc, Wc)
 
         # Data augmentation
         if self.train:
@@ -150,7 +173,8 @@ def get_dataloader(dataset_name, is_train, opt, localrank):
     BS = opt.bs
     numworkers = opt.num_workers
     crop_size = opt.crop_size if opt.crop else 'whole_img'
-
+    edge_decay = opt.edge_decay
+    
     train_kwargs = {
         'batch_size': BS, 'shuffle': True, 'num_workers': numworkers,
         'pin_memory': True, 'prefetch_factor': 2, 'persistent_workers': True,
@@ -165,20 +189,20 @@ def get_dataloader(dataset_name, is_train, opt, localrank):
 
     if 'rw2ah' in dataset_name:
         path = "/workspace/Datasets/RW2AH"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
     elif 'rudb' in dataset_name:
         path = "/workspace/Datasets/MergedDataset"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
     elif 'rrshid' in dataset_name:
         path = "/workspace/Datasets/RRSHID-noVal"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
         
     elif 'its' in dataset_name:
         path = "/workspace/RESIDE-IN"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
     elif 'ots' in dataset_name:
         path = "/workspace/RESIDE-OUT"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 

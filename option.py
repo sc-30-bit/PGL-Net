@@ -53,6 +53,7 @@ parser.add_argument('--lpips_eval', type=str2bool, default=False, help='evaluate
 parser.add_argument('--lpips_net', type=str, default='vgg', choices=['alex', 'vgg', 'squeeze'], help='LPIPS network type')
 parser.add_argument('--use_ddp', action='store_true', default=False, help='use Distributed Data Parallel')
 parser.add_argument('--num_workers', default=16, type=int, help='number of workers')
+parser.add_argument('--edge_decay', default=0.0, type=float, help='edge decay for cropping')
 
 opt=parser.parse_args()
 

@@ -17,5 +17,6 @@
     "amp": true,
     "loss_type": "l1_fft",
     "fft_loss_weight": 0.1,
-    "exp_num": 1
+    "exp_num": 1,
+    "edge_decay": 0.1
 }
