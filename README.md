@@ -67,9 +67,16 @@ The following paper tables are provided as images. Click each section to expand.
 
 ## Deployment
 
-<p align="center">
-  <img src="figs/deployment.png" alt="Deployment">
-</p>
+Explore deployment efficiency below. FP16 latency is measured at `512 x 512`, with [TensorRT](https://developer.nvidia.com/tensorrt) for GPUs and [OpenVINO](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) for CPU.
+
+| Model | size<br>(pixels) | Speed<br>CPU OpenVINO (ms) | Speed<br>T4 TensorRT10 (ms) | Speed<br>3090 TensorRT10 (ms) | params<br>(M) | MACs<br>(G) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| [PGL-Net-T](#weights-pgl-net-t) | 512 | 14.69 | 12.90 | 3.92 | 0.78 | 2.71 |
+| [PGL-Net-S](#weights-pgl-net-s) | 512 | 24.58 | 23.11 | 6.68 | 1.30 | 4.77 |
+
+Weights:
+- <a id="weights-pgl-net-t"></a>**PGL-Net-T**: [Google Drive (Coming Soon)]()
+- <a id="weights-pgl-net-s"></a>**PGL-Net-S**: [Google Drive (Coming Soon)]()
 
 ## Environment Setup
 
