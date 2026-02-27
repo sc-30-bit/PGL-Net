@@ -137,7 +137,7 @@ def dominates(a, b):
     return False
 
 class FixedRangePSNRNormalizer:
-    def __init__(self, min_psnr=0.0, max_psnr=40.0):
+    def __init__(self, min_psnr=10.0, max_psnr=50.0):
         """
         Fixed range PSNR normalizer
 
@@ -175,7 +175,7 @@ class FixedRangePSNRNormalizer:
         return max(0.0, min(1.0, normalized))
 
 # Global instance: use the actual range you observed
-psnr_normalizer = FixedRangePSNRNormalizer(min_psnr=5.0, max_psnr=25.0)
+psnr_normalizer = FixedRangePSNRNormalizer(min_psnr=5.0, max_psnr=50.0)
 
 def normalize_metrics(psnr, ssim, lpips, use_lpips=True, psnr_normer=None):
     """
