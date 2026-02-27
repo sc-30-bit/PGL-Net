@@ -83,7 +83,7 @@ FP16 latency is measured at `512 x 512`, using [TensorRT](https://developer.nvid
   </thead>
   <tbody>
     <tr>
-      <td>PGL-Net-T</td>
+      <td>Tiny</td>
       <td align="center">512</td>
       <td align="center">14.69</td>
       <td align="center">12.90</td>
@@ -92,7 +92,7 @@ FP16 latency is measured at `512 x 512`, using [TensorRT](https://developer.nvid
       <td align="center">2.71</td>
     </tr>
     <tr>
-      <td>PGL-Net-S</td>
+      <td>Small</td>
       <td align="center">512</td>
       <td align="center">24.58</td>
       <td align="center">23.11</td>
