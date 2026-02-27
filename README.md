@@ -55,6 +55,10 @@ The following paper tables are provided as images. Click each section to expand.
 
 </details>
 
+## Deployment
+
+![Deployment](figs/deployment.png)
+
 ## Environment Setup
 
 1. Create a new conda environment
