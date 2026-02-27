@@ -72,13 +72,13 @@ FP16 latency is measured at `512 x 512`, using [TensorRT](https://developer.nvid
 <table align="center">
   <thead>
     <tr>
-      <th>Model</th>
-      <th>Size (pixels)</th>
-      <th>CPU OpenVINO (ms)</th>
-      <th>T4 TensorRT10 (ms)</th>
-      <th>RTX 3090 TensorRT10 (ms)</th>
-      <th>Params (M)</th>
-      <th>MACs (G)</th>
+      <th><nobr>Model</nobr></th>
+      <th><nobr>Size (pixels)</nobr></th>
+      <th><nobr>CPU OpenVINO (ms)</nobr></th>
+      <th><nobr>T4 TensorRT (ms)</nobr></th>
+      <th><nobr>RTX 3090 TensorRT (ms)</nobr></th>
+      <th><nobr>Params (M)</nobr></th>
+      <th><nobr>MACs (G)</nobr></th>
     </tr>
   </thead>
   <tbody>
