@@ -62,11 +62,12 @@ def tensorShow(tensors,titles=None):
         plt.show()
 
 class PairedLoader(data.Dataset):
-    def __init__(self, path, localrank, train=True, size='whole_img', edge_decay=0.0):
+    def __init__(self, path, localrank, train=True, size='whole_img', edge_decay=0.0, augment=True):
         super(PairedLoader, self).__init__()
         self.size = size
         self.train = train
         self.edge_decay = edge_decay
+        self.augment=augment
 
         # Select different subdirectories based on train/test mode
         if train:
@@ -130,7 +131,7 @@ class PairedLoader(data.Dataset):
 
     def augData(self, data, target):
         # Data augmentation for training
-        if self.train:
+        if self.train and self.augment:
             if random.random() > 0.5:
                 data = FF.hflip(data)
                 target = FF.hflip(target)
@@ -186,7 +187,7 @@ def get_dataloader(dataset_name, is_train, opt, localrank):
         dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
     elif 'ots' in dataset_name:
         path = "/workspace/RESIDE-OUT"
-        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay)
+        dataset = PairedLoader(path, localrank, train=is_train, size=size, edge_decay=edge_decay, augment=False)
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 

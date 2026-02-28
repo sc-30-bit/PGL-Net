@@ -174,7 +174,7 @@ class FixedRangePSNRNormalizer:
         normalized = (current_val - self.min_val) / (self.max_val - self.min_val)
         return max(0.0, min(1.0, normalized))
 
-# Global instance: use the actual range you observed
+# Note: Global instance: use the actual range you observed in your dataset !!!
 psnr_normalizer = FixedRangePSNRNormalizer(min_psnr=5.0, max_psnr=50.0)
 
 def normalize_metrics(psnr, ssim, lpips, use_lpips=True, psnr_normer=None):
