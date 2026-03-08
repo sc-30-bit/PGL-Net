@@ -4,8 +4,6 @@ import torch.nn.functional as F
 import math
 from torch.nn.init import _calculate_fan_in_and_fan_out
 from timm.models.layers import to_2tuple, trunc_normal_
-from .Ablation import *
-
 
 class DSConv(nn.Module):
     def __init__(self, c_in, c_out, k=3, s=1, p=None, d=1, bias=False):
