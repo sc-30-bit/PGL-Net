@@ -216,6 +216,22 @@ Test on RUDB (PGL-Net-T)
 python test.py --weight rudb_pglnet_t.pk --model_type pglnet_t --test_dir ./datasets/RUDB/test/input --gt_dir ./datasets/RUDB/test/gt --tile 1024
 ```
 
+## Examples
+
+<details>
+<summary><strong>We provide deployment and inference examples by backend</strong> (click to expand)</summary>
+<br>
+
+- Guide: `examples/README.md`
+- TensorRT: `examples/PGLNet-TensorRT-Python/README.md`, `examples/PGLNet-TensorRT-CPP/README.md`
+- OpenVINO: `examples/PGLNet-OpenVINO-Python/README.md`, `examples/PGLNet-OpenVINO-CPP/README.md`
+- ONNXRuntime: `examples/PGLNet-ONNXRuntime-Python/README.md`, `examples/PGLNet-ONNXRuntime-CPP/README.md`
+- OpenCV-DNN: `examples/PGLNet-OpenCV-DNN-Python/README.md`, `examples/PGLNet-OpenCV-DNN-CPP/README.md`
+- MNN: `examples/PGLNet-MNN-CPP/README.md`
+- Tiled Inference: `examples/PGLNet-Tiled-Inference-Python/README.md`
+
+</details>
+
 ## Model Overhead (Params / MACs)
 
 ```bash
