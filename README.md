@@ -2,7 +2,6 @@
 
 <p align="left">
   <a href=""><img src="" alt="arXiv"></a>
-  <a href=""><img src="" alt="Paper"></a>
   <a href=""><img src="" alt="Datasets"></a>
   <a href=""><img src="" alt="Weights"></a>
 </p>
