@@ -1,0 +1,4 @@
+numpy>=1.23
+opencv-python>=4.8
+pycuda>=2022.2
+tensorrt>=8.6

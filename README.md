@@ -17,6 +17,12 @@
   <img src="figs/insight.png" alt="Insight">
 </p>
 
+## Architecture
+
+<p align="center">
+  <img src="figs/architecture.png" alt="Architecture">
+</p>
+
 ## Quantitative Results
 
 The following paper tables are provided as images. Click each section to expand.
@@ -61,6 +67,38 @@ The following paper tables are provided as images. Click each section to expand.
 
 <p align="center">
   <img src="figs/rtts_results.png" alt="RTTS Results">
+</p>
+
+</details>
+
+## Subjective Results
+
+<details>
+<summary><strong>RRSHID Qualitative Results</strong> (click to expand)</summary>
+<br>
+
+<p align="center">
+  <img src="figs/rrshid_qualitative.png" alt="RRSHID Qualitative Results">
+</p>
+
+</details>
+
+<details>
+<summary><strong>RW2AH Qualitative Results</strong> (click to expand)</summary>
+<br>
+
+<p align="center">
+  <img src="figs/rw2ah_qualitative.png" alt="RW2AH Qualitative Results">
+</p>
+
+</details>
+
+<details>
+<summary><strong>NTIRE Qualitative Results</strong> (click to expand)</summary>
+<br>
+
+<p align="center">
+  <img src="figs/ntire_qualitative.png" alt="NTIRE Qualitative Results">
 </p>
 
 </details>
