@@ -253,7 +253,3 @@ python ./tools/latency.py --shapes 1x3x512x512
   year    = {2026}
 }
 ```
-
-## Acknowledgement
-
-This README will be updated after paper release.
