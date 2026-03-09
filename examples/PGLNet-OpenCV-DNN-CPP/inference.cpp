@@ -13,8 +13,8 @@ char* PGLNetOpenCVDNN::CreateSession(DL_INIT_PARAM& params) {
         warmupRuns = params.warmupRuns;
         benchRuns = params.benchRuns;
         net = cv::dnn::readNetFromONNX(params.modelPath);
-        net.setPreferableBackend(params.backend);
         net.setPreferableTarget(params.target);
+        net.setPreferableBackend(params.backend);
         return RET_OK;
     } catch (const std::exception& e) {
         std::cerr << "[PGLNet-OpenCV-DNN] CreateSession failed: " << e.what() << "\n";
@@ -90,4 +90,3 @@ char* PGLNetOpenCVDNN::RunSession(cv::Mat& inputBgr, cv::Mat& outputBgr, bool re
     std::cout << "[PGLNet-OpenCV-DNN] avg/min/max: " << avg << "/" << *mn << "/" << *mx << " ms, FPS: " << 1000.0 / avg << "\n";
     return RET_OK;
 }
-

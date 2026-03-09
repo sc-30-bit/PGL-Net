@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include <opencv2/opencv.hpp>
 
@@ -7,7 +8,7 @@
 
 int main(int argc, char** argv) {
     if (argc < 4) {
-        std::cout << "Usage: pglnet_opencv_dnn <model.onnx> <input.jpg> <output.jpg> [runs=20] [resize_back=0|1]\n";
+        std::cout << "Usage: pglnet_opencv_dnn <model.onnx> <input.jpg> <output.jpg> [runs=20] [resize_back=0|1] [device=cpu|gpu|gpu_fp16]\n";
         return 1;
     }
 
@@ -16,6 +17,7 @@ int main(int argc, char** argv) {
     const std::string outputPath = argv[3];
     const int runs = argc > 4 ? std::max(1, std::stoi(argv[4])) : 20;
     const bool resizeBack = argc > 5 ? std::stoi(argv[5]) != 0 : false;
+    const std::string device = argc > 6 ? argv[6] : "cpu";
 
     cv::Mat input = cv::imread(inputPath);
     if (input.empty()) {
@@ -26,8 +28,34 @@ int main(int argc, char** argv) {
     DL_INIT_PARAM params;
     params.modelPath = modelPath;
     params.benchRuns = runs;
-    params.backend = cv::dnn::DNN_BACKEND_OPENCV;
-    params.target = cv::dnn::DNN_TARGET_CPU;
+    if (device == "gpu") {
+        auto cudaTargets = cv::dnn::getAvailableTargets(cv::dnn::DNN_BACKEND_CUDA);
+        if (cudaTargets.empty()) {
+            std::cerr << "[PGLNet-OpenCV-DNN] CUDA backend is not available in this OpenCV build/runtime.\n";
+            return 1;
+        }
+        params.backend = cv::dnn::DNN_BACKEND_CUDA;
+        if (std::find(cudaTargets.begin(), cudaTargets.end(), cv::dnn::DNN_TARGET_CUDA) != cudaTargets.end()) {
+            params.target = cv::dnn::DNN_TARGET_CUDA;
+        } else if (std::find(cudaTargets.begin(), cudaTargets.end(), cv::dnn::DNN_TARGET_CUDA_FP16) != cudaTargets.end()) {
+            params.target = cv::dnn::DNN_TARGET_CUDA_FP16;
+        } else {
+            std::cerr << "[PGLNet-OpenCV-DNN] No compatible CUDA target found for DNN backend.\n";
+            return 1;
+        }
+    } else if (device == "gpu_fp16") {
+        auto cudaTargets = cv::dnn::getAvailableTargets(cv::dnn::DNN_BACKEND_CUDA);
+        if (std::find(cudaTargets.begin(), cudaTargets.end(), cv::dnn::DNN_TARGET_CUDA_FP16) == cudaTargets.end()) {
+            std::cerr << "[PGLNet-OpenCV-DNN] CUDA FP16 target is not available.\n";
+            return 1;
+        }
+        params.backend = cv::dnn::DNN_BACKEND_CUDA;
+        params.target = cv::dnn::DNN_TARGET_CUDA_FP16;
+    } else {
+        params.backend = cv::dnn::DNN_BACKEND_OPENCV;
+        params.target = cv::dnn::DNN_TARGET_CPU;
+    }
+    std::cout << "[PGLNet-OpenCV-DNN] device mode: " << device << "\n";
 
     PGLNetOpenCVDNN net;
     char* ret = net.CreateSession(params);
@@ -58,4 +86,3 @@ int main(int argc, char** argv) {
     std::cout << "Saved: " << comparePath << "\n";
     return 0;
 }
-
