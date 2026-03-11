@@ -102,6 +102,16 @@ The following paper tables are provided as images. Click each section to expand.
 
 </details>
 
+<details>
+<summary><strong>RTTS Qualitative Results</strong> (click to expand)</summary>
+<br>
+
+<p align="center">
+  <img src="figs/rtts_qualitative.png" alt="RTTS Qualitative Results">
+</p>
+
+</details>
+
 ## Deployment
 
 FP16 latency is measured at `512 x 512`, using [TensorRT]() on GPUs and [OpenVINO]() on CPU.
