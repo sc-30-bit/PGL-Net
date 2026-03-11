@@ -1,8 +1,8 @@
 # PGLNet Tiled Inference (Python)
 
-This example demonstrates SAHI-like tiled inference for large images.
+This example demonstrates tiled inference for large images.
 
-This example adds SAHI-like sliding-window inference for PGLNet ONNX models:
+This example adds sliding-window inference for PGLNet ONNX models:
 
 - `tile`: patch size
 - `tile_overlap`: overlap between patches
