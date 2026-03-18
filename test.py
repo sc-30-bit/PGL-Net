@@ -13,7 +13,7 @@ import importlib
 
 from models import pglnet_t, pglnet_s, pglnet_b, pglnet_d
 from basicsr.metrics.niqe import calculate_niqe
-from metrics import psnr, ssim, calculate_lpips, _get_lpips_model
+from utils.metrics import psnr, ssim, calculate_lpips, _get_lpips_model
 
 warnings.filterwarnings('ignore')
 
