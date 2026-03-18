@@ -11,7 +11,7 @@ from PIL import Image
 from torch.utils.data import DataLoader
 from matplotlib import pyplot as plt
 from torchvision.utils import make_grid
-from option import opt
+from utils.option import opt
 # Set random seed for reproducibility
 seed = 42
 random.seed(seed)

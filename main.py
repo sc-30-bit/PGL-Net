@@ -1,6 +1,5 @@
 import torch, os, sys, torchvision, argparse
 import torchvision.transforms as tfs
-from metrics import psnr, ssim, calculate_lpips
 from models import *
 import time, math
 import numpy as np
@@ -18,10 +17,7 @@ import torch.distributed as dist
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import DataLoader
 
-from option import opt, model_name, log_dir
 from data_loader import *
-from losses import *
-from lr_scheduler import *
 from utils import *
 
 seed = 42
