@@ -18,8 +18,6 @@
 
 ## Quantitative Results
 
-The following paper tables are provided as images. Click each section to expand.
-
 <details>
 <summary><strong>RRSHID Results</strong> (click to expand)</summary>
 <br>
