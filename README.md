@@ -1,9 +1,9 @@
 ﻿# Efficient Real-World Dehazing via Physics-Inspired Global-Local Decoupling
 
 <p align="left">
-  <a href=""><img src="" alt="arXiv"></a>
-  <a href=""><img src="" alt="Datasets"></a>
-  <a href=""><img src="" alt="Weights"></a>
+  <a href=""><img src="https://img.shields.io/badge/arXiv-Paper-b31b1b?logo=arxiv" alt="arXiv"></a>
+  <a href="https://drive.google.com/drive/folders/1iZZq8k6Jb7CtFT9uYi96F8TZht2d3b3O?usp=sharing"><img src="https://img.shields.io/badge/Google_Drive-Datasets-blue?logo=googledrive" alt="Datasets"></a>
+  <a href="https://drive.google.com/drive/folders/1xXYw46ePeGNvL67r7H1-W5p1ntfEwFf3?usp=sharing"><img src="https://img.shields.io/badge/Google_Drive-Weights-blue?logo=googledrive" alt="Weights"></a>
 </p>
 
 
@@ -151,6 +151,11 @@ FP16 latency is measured at `512 x 512`, using [TensorRT]() on GPUs and [OpenVIN
 </table>
 
 
+## Datasets and Pretrained Weights
+
+- [Download datasets from Google Drive](https://drive.google.com/drive/folders/1iZZq8k6Jb7CtFT9uYi96F8TZht2d3b3O?usp=sharing)
+- [Download pretrained weights from Google Drive](https://drive.google.com/drive/folders/1xXYw46ePeGNvL67r7H1-W5p1ntfEwFf3?usp=sharing)
+
 ## Environment Setup
 
 1. Create a new conda environment
@@ -244,7 +249,7 @@ python test.py --weight rudb_pglnet_t.pk --model_type pglnet_t --test_dir ./data
 ## Model Overhead (Params / MACs)
 
 ```bash
-python ./tools/overhead.py
+python ./tools/Overhead.py
 ```
 
 ## Latency
