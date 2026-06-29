@@ -52,15 +52,15 @@
 </details>
 
 <details>
-<summary><strong>RTTS Results</strong> (click to expand)</summary>
+<summary><strong>RTTS Detection and NR-IQA Results</strong> (click to expand)</summary>
 <br>
 
 <p align="center">
-  <img src="figs/rtts_results.png" alt="RTTS Results">
+  <img src="figs/rtts_detection.png" alt="RTTS Detection Results">
 </p>
 
 <p align="center">
-  <img src="figs/rtts_nriqa.png" alt="RTTS NR-IQA Results">
+  <img src="figs/rtts_urhi_nriqa.png" alt="RTTS and URHI NR-IQA Results">
 </p>
 
 </details>
