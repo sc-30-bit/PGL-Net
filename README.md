@@ -55,9 +55,12 @@
 <summary><strong>RTTS Results</strong> (click to expand)</summary>
 <br>
 
-
 <p align="center">
   <img src="figs/rtts_results.png" alt="RTTS Results">
+</p>
+
+<p align="center">
+  <img src="figs/rtts_nriqa.png" alt="RTTS NR-IQA Results">
 </p>
 
 </details>
