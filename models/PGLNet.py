@@ -175,6 +175,74 @@ class PAFusion(nn.Module):
         return out
 
 
+class AffineE(nn.Module):
+    """Affine-E skip fusion conditioned only on the encoder feature."""
+    def __init__(self, dim, height=2, reduction=8):
+        super(AffineE, self).__init__()
+        self.dim = dim
+
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+
+        # Encoder conditioning branch only.
+        self.pw_enc = nn.Conv2d(dim, dim, kernel_size=1, bias=True)
+
+        self.act = nn.ReLU(inplace=True)
+
+        self.final_conv = nn.Conv2d(dim, dim * 2, kernel_size=1, bias=True)
+
+    def forward(self, in_feats):
+        up_feat = in_feats[0]
+        skip_feat = in_feats[1]
+
+        gap_skip = self.avg_pool(skip_feat)  # (B, C, 1, 1)
+        fused_stats = self.pw_enc(gap_skip)  # (B, C, 1, 1)
+        fused_stats = self.act(fused_stats)
+
+        # affine_params shape: (B, 2C, 1, 1)
+        affine_params = self.final_conv(fused_stats)
+        gamma, beta = torch.chunk(affine_params, 2, dim=1)
+
+        # Apply Affine Transformation to Skip Feature.
+        skip_aligned = skip_feat * gamma + beta
+        out = up_feat + skip_aligned
+
+        return out
+
+
+class AffineD(nn.Module):
+    """Affine-D skip fusion conditioned only on the decoder feature."""
+    def __init__(self, dim, height=2, reduction=8):
+        super(AffineD, self).__init__()
+        self.dim = dim
+
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+
+        # Decoder conditioning branch only.
+        self.pw_dec = nn.Conv2d(dim, dim, kernel_size=1, bias=True)
+
+        self.act = nn.ReLU(inplace=True)
+
+        self.final_conv = nn.Conv2d(dim, dim * 2, kernel_size=1, bias=True)
+
+    def forward(self, in_feats):
+        up_feat = in_feats[0]
+        skip_feat = in_feats[1]
+
+        gap_up = self.avg_pool(up_feat)    # (B, C, 1, 1)
+        fused_stats = self.pw_dec(gap_up)  # (B, C, 1, 1)
+        fused_stats = self.act(fused_stats)
+
+        # affine_params shape: (B, 2C, 1, 1)
+        affine_params = self.final_conv(fused_stats)
+        gamma, beta = torch.chunk(affine_params, 2, dim=1)
+
+        # Apply Affine Transformation to Skip Feature.
+        skip_aligned = skip_feat * gamma + beta
+        out = up_feat + skip_aligned
+
+        return out
+
+
 class PGLNet(nn.Module):
     def __init__(self, kernel_size=5, base_dim=32, depths=[4, 4, 4, 4, 4, 4, 4], conv_layer=GateLayer, norm_layer=nn.BatchNorm2d,
                  gate_act=nn.Sigmoid, fusion_layer=PAFusion):
@@ -237,7 +305,8 @@ class PGLNet(nn.Module):
         return x
 
 
-__all__ = ['PGLNet', 'pglnet_t', 'pglnet_s', 'pglnet_b', 'pglnet_d']
+__all__ = ['PGLNet', 'PAFusion', 'AffineE', 'AffineD',
+           'pglnet_t', 'pglnet_s', 'pglnet_b', 'pglnet_d']
 
 def pglnet_t():
     return PGLNet(kernel_size=5, base_dim=24, depths=[2, 2, 2, 4, 2, 2, 2], conv_layer=GateLayer,
