@@ -1,4 +1,4 @@
-﻿# Efficient Real-World Dehazing via Physics-Inspired Global-Local Decoupling
+﻿# Efficient Real-World Dehazing via Physics-Inspired Global-Local Decoupling (WACV 2027)
 
 <p align="left">
   <a href="http://arxiv.org/abs/2606.25732"><img src="https://img.shields.io/badge/arXiv-Paper-b31b1b?logo=arxiv" alt="arXiv"></a>
